@@ -28,10 +28,16 @@ def load_orders(conn: Connection) -> None:
 def load_order_items(conn: Connection) -> None:
     df = pd.read_csv(Path(DATA_DIR) / "order_items.csv")
     negative_qty = df[df["quantity"] < 0]
+    missing_orders = df["order_id"].isna().sum()
 
     if not negative_qty.empty:
         logger.warning(
             f"Found {len(negative_qty)} rows with negative quantities"
         )
+    if missing_orders > 0:
+        logger.warning(
+        f"Found {missing_orders} order items with missing order_id"
+        )
+
     df.to_sql("order_items", conn, if_exists="replace", index=False)
     logger.info(f"Loaded {len(df)} order_items")
