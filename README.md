@@ -115,3 +115,27 @@ python -m pip install -r requirements.txt
 # Run the pipeline
 python -m src.sales_analytics.main
 ```
+
+# Solution Notes
+
+Implemented
+
+Customer revenue report implemented using SQL aggregation.
+Refund orders (total_amount < 0) excluded from revenue calculations.
+Top products report implemented using total revenue (quantity * unit_price).
+Missing total_amount values are replaced with 0.0 during data loading.
+Added logging for:
+Loaded row counts per dataset.
+Negative quantities detected in order items.
+Missing order references.
+Added database indexes on:
+orders.customer_id
+orders.order_date
+Added CLI argument support using argparse.
+CLI Usage
+It's Important to apply dates filter logic on analytics.py
+
+python -m src.sales_analytics.main \
+  --output-dir ./custom_reports \
+  --from-date 2025-01-01 \
+  --to-date 2025-02-28
