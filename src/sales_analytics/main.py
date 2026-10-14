@@ -42,7 +42,9 @@ def main() -> None:
 
     generate_reports(
         conn,
-        output_dir=Path(args.output_dir)
+        output_dir=Path(args.output_dir),
+        from_date=args.from_date,
+        to_date=args.to_date
     )
 
 
