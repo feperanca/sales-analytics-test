@@ -37,15 +37,11 @@ def compute_revenue_per_customer_month(conn: Connection, from_date: str = None, 
     
     return pd.read_sql_query(query, conn, params=params)
 
-    df = pd.DataFrame(columns=["customer_id", "name", "country", "year_month", "revenue"])
-    df.loc[0] = [6, "Quantum Analytics", "US", "2025-01", 3200]  # Sample row
-    return df
 
 def compute_top_products(conn: Connection, limit: int = 5, from_date: str = None, to_date: str = None) -> pd.DataFrame:
     query = """
     SELECT
         i.product_name,
-        o.order_date AS order_date,
 	ROUND(SUM(i.quantity * i.unit_price), 2) AS total_revenue    
     FROM order_items i
     INNER JOIN orders o
@@ -62,16 +58,13 @@ def compute_top_products(conn: Connection, limit: int = 5, from_date: str = None
                 params.append(to_date)
                 
     query += """
-    GROUP BY i.product_name,
-    o.order_date
+    GROUP BY i.product_name
     ORDER BY total_revenue DESC
     LIMIT ?
     """
 
     return pd.read_sql_query(query, conn, params=params + [limit])
-    df = pd.DataFrame(columns=["product_name", "total_revenue"])
-    df.loc[0] = ["Laptop Pro", 6000]  # Sample row
-    return df
+    
 
 def generate_reports(conn: Connection, output_dir: Path, from_date: str = None, to_date: str = None) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
